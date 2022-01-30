@@ -13,8 +13,8 @@ export class clientAuthStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    if (payload.role != "client") {
-        return false
+    if (payload.role != 'client') {
+      return false;
     }
 
     return { userId: payload.id, role: payload.role };

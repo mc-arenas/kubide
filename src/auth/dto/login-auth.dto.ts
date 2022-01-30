@@ -1,4 +1,4 @@
 export class LoginAuthDto {
-    username: String
-    password: String
+  email: string;
+  password: string;
 }

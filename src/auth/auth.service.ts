@@ -1,22 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { LoginAuthDto } from './dto/login-auth.dto';
-import { JwtService } from '@nestjs/jwt';
-import { LoginEntity } from './entities/login.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
- 
-  constructor (private jwtService: JwtService){ }
+  constructor(
+    @Inject('USERS_REPOSITORY')
+    private usersRepository: typeof User,
+  ) {}
 
-  login(loginAuthDto: LoginAuthDto): LoginEntity {
-    const payload = { id: 2, role: 'client' };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+  async findUserByEmail(email: string) {
+    return await this.usersRepository.findOne({
+      where: {
+        active: true,
+        email: email,
+      },
+    });
   }
 
-  register(registerAuthDto: RegisterAuthDto) {
-    return 'Ok';
+  async registerUser(registerAuthDto: RegisterAuthDto) {
+    return await this.usersRepository.create({...registerAuthDto});
   }
+
 }

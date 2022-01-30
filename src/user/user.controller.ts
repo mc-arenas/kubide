@@ -1,37 +1,49 @@
-import { Controller, Get, Post, Request, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Request,
+  Param,
+  UseGuards,
+  Put,
+  Body,
+  HttpStatus,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ClientAuthGuard } from 'src/auth/guards/client-auth.guard';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
-
   @UseGuards(ClientAuthGuard)
   @Get()
-  findAll(@Request() req) {
-    console.log(req.user)
+  findAll() {
     return this.userService.findAll();
   }
 
+  @UseGuards(ClientAuthGuard)
+  @Get('me')
+  findMe(@Request() req) {
+    return this.userService.findOne(req.user.userId);
+  }
+
+  @UseGuards(ClientAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  findOne(@Param('id') userId: number) {
+    return this.userService.findOne(userId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
+  @UseGuards(ClientAuthGuard)
+  @Put()
+  update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    if (
+      updateUserDto.name == undefined ||
+      updateUserDto.name.trim() == ""
+    ) {
+      throw { message: 'Invalid data', statusCode: HttpStatus.BAD_REQUEST };
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.updateUser(req.user.userId, updateUserDto);
   }
 }
