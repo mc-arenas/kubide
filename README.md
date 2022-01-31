@@ -55,6 +55,7 @@ $ docker run -e JWT_SECRET=secret -e DATABASE_PASSWORD=password -p 8080:3000 kub
 ```
 
 ## Comentarios 
+Se ha realizado la autenticación con JWT y bcrypt. Para crear la base de datos se ha utilizado el ORM sequelize.
 
 Tener en cuenta que será necesario cambiar el nombre del host en el fichero `database.providers.ts`
 
