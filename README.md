@@ -19,12 +19,11 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
 
 ## Installation
 
@@ -44,30 +43,23 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+Hace falta añadir las variables de entorno DATABASE_PASSWORD y JWT_SECRET, se puede añadir creando un fichero .env en el directorio principal
 
-## Test
-
+## Running the app with docker
 ```bash
-# unit tests
-$ npm run test
+# docker build
+$ docker build -t kubide .
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# docker run
+$ docker run -e JWT_SECRET=secret -e DATABASE_PASSWORD=password -p 8080:3000 kubide
 ```
 
-## Support
+## Comentarios 
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Tener en cuenta que será necesario cambiar el nombre del host en el fichero `database.providers.ts`
 
-## Stay in touch
+Para poder realizar las peticiones de forma fácil se adjunta fichero con la colección de Postman.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Se han activado las cors y accediendo a /api se puede ver un swagger desplegado.
 
-## License
-
-Nest is [MIT licensed](LICENSE).
+No he tenido mucho tiempo así que no he contemplado las notificaciones.
