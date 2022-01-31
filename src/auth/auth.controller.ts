@@ -4,12 +4,14 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { NoAuthGuard } from './guards/no-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -19,6 +21,7 @@ export class AuthController {
   ) {}
 
   @Post('login')
+  @UseGuards(NoAuthGuard)
   async login(@Body() loginAuthDto: LoginAuthDto) {
     try {
       if (
@@ -37,9 +40,15 @@ export class AuthController {
         throw { message: 'Not found user', statusCode: HttpStatus.NOT_FOUND };
       }
 
-      const isValidPassword = await bcrypt.compare(loginAuthDto.password, user.password);
+      const isValidPassword = await bcrypt.compare(
+        loginAuthDto.password,
+        user.password,
+      );
       if (!isValidPassword) {
-        throw { message: 'Invalid password', statusCode: HttpStatus.UNAUTHORIZED };
+        throw {
+          message: 'Invalid password',
+          statusCode: HttpStatus.UNAUTHORIZED,
+        };
       }
 
       return {
@@ -57,6 +66,7 @@ export class AuthController {
   }
 
   @Post('register')
+  @UseGuards(NoAuthGuard)
   async register(@Body() registerAuthDto: RegisterAuthDto) {
     try {
       if (
@@ -72,18 +82,24 @@ export class AuthController {
       ) {
         throw { message: 'Invalid data', statusCode: HttpStatus.BAD_REQUEST };
       }
-      
+
       // check email
       let user = await this.authService.findUserByEmail(registerAuthDto.email);
       if (user != null) {
-        throw { message: 'Invalid data: email already registered', statusCode: HttpStatus.BAD_REQUEST };
+        throw {
+          message: 'Invalid data: email already registered',
+          statusCode: HttpStatus.BAD_REQUEST,
+        };
       }
 
       // register user
-      registerAuthDto.password = await bcrypt.hash(registerAuthDto.password, 10)
+      registerAuthDto.password = await bcrypt.hash(
+        registerAuthDto.password,
+        10,
+      );
       user = await this.authService.registerUser(registerAuthDto);
-      console.log(user)
-     
+      console.log(user);
+
       return {
         access_token: this.jwtService.sign({
           id: user.id,

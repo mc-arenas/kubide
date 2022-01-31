@@ -9,19 +9,19 @@ export class UserService {
     private usersRepository: typeof User,
   ) {}
 
-  findAll() {
-    return this.usersRepository.findAll({ where: { active: true } });
+  async findAll() {
+    return await this.usersRepository.findAll({ where: { active: true } });
   }
 
-  findOne(userId: number) {
-    return this.usersRepository.findByPk(userId);
+  async findOne(userId: number) {
+    return await this.usersRepository.findByPk(userId);
   }
 
-  updateUser(userId: number, updateUserDto: UpdateUserDto) {
-    return this.usersRepository.update(updateUserDto, {
+  async updateUser(userId: number, updateUserDto: UpdateUserDto) {
+    return await this.usersRepository.update(updateUserDto, {
       where: {
-        id: userId
-      }
+        id: userId,
+      },
     });
   }
 }

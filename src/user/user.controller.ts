@@ -18,32 +18,29 @@ export class UserController {
 
   @UseGuards(ClientAuthGuard)
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @UseGuards(ClientAuthGuard)
   @Get('me')
-  findMe(@Request() req) {
-    return this.userService.findOne(req.user.userId);
+  async findMe(@Request() req) {
+    return await this.userService.findOne(req.user.userId);
   }
 
   @UseGuards(ClientAuthGuard)
   @Get(':id')
-  findOne(@Param('id') userId: number) {
-    return this.userService.findOne(userId);
+  async findOne(@Param('id') userId: number) {
+    return await this.userService.findOne(userId);
   }
 
   @UseGuards(ClientAuthGuard)
   @Put()
-  update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    if (
-      updateUserDto.name == undefined ||
-      updateUserDto.name.trim() == ""
-    ) {
+  async update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    if (updateUserDto.name == undefined || updateUserDto.name.trim() == '') {
       throw { message: 'Invalid data', statusCode: HttpStatus.BAD_REQUEST };
     }
 
-    return this.userService.updateUser(req.user.userId, updateUserDto);
+    return await this.userService.updateUser(req.user.userId, updateUserDto);
   }
 }
