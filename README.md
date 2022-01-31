@@ -51,7 +51,7 @@ Hace falta añadir las variables de entorno DATABASE_PASSWORD y JWT_SECRET, se p
 $ docker build -t kubide .
 
 # docker run
-$ docker run -e JWT_SECRET=secret -e DATABASE_PASSWORD=password -p 8080:3000 kubide
+$ docker run -e JWT_SECRET=secret -e DATABASE_PASSWORD=password -p 3000:3000 kubide
 ```
 
 ## Comentarios 
